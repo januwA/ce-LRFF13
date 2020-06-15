@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="31">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"一刀秒)不要用u打怪"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{
++101 my==#48  会出问题
++111 my==#48
++1c0 my==#1
++24c my==#500
+}
+
+[ENABLE]
+aobscanmodule(ms_INJECT,LRFF13.exe,89 BE E0 02 00 00) // should be unique
+alloc(newmem,$1000)
+
+alloc(pHp,$8)
+registersymbol(pHp)
+pHp:
+  dd 0
+
+label(code)
+label(return)
+label(myHp)
+
+newmem:
+  pushf
+  cmp [esi+1c0],1
+  je myHp
+  mov edi,0
+  jmp code
+
+myHp:
+  mov [pHp],esi
+  mov edi,[esi+30c] // 设置最大hp
+  jmp code
+
+code:
+  popf
+  mov [esi+000002E0],edi
+  jmp return
+
+ms_INJECT:
+  jmp newmem
+  nop
+return:
+registersymbol(ms_INJECT)
+
+[DISABLE]
+
+ms_INJECT:
+  db 89 BE E0 02 00 00
+unregistersymbol(pHp)
+dealloc(pHp)
+unregistersymbol(ms_INJECT)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "LRFF13.exe"+DCCE2
+
+"LRFF13.exe"+DCCC3: 75 13                 -  jne LRFF13.exe+DCCD8
+"LRFF13.exe"+DCCC5: 8B CE                 -  mov ecx,esi
+"LRFF13.exe"+DCCC7: E8 F4 1B FF FF        -  call LRFF13.exe+CE8C0
+"LRFF13.exe"+DCCCC: 85 C0                 -  test eax,eax
+"LRFF13.exe"+DCCCE: 75 2D                 -  jne LRFF13.exe+DCCFD
+"LRFF13.exe"+DCCD0: 84 9E 85 02 00 00     -  test [esi+00000285],bl
+"LRFF13.exe"+DCCD6: 74 08                 -  je LRFF13.exe+DCCE0
+"LRFF13.exe"+DCCD8: 89 BE E8 02 00 00     -  mov [esi+000002E8],edi
+"LRFF13.exe"+DCCDE: EB 1D                 -  jmp LRFF13.exe+DCCFD
+"LRFF13.exe"+DCCE0: 8B CE                 -  mov ecx,esi
+// ---------- INJECTING HERE ----------
+"LRFF13.exe"+DCCE2: 89 BE E0 02 00 00     -  mov [esi+000002E0],edi
+// ---------- DONE INJECTING  ----------
+"LRFF13.exe"+DCCE8: E8 F3 7C FE FF        -  call LRFF13.exe+C49E0
+"LRFF13.exe"+DCCED: 6A 00                 -  push 00
+"LRFF13.exe"+DCCEF: 8B CE                 -  mov ecx,esi
+"LRFF13.exe"+DCCF1: E8 AA 1E FF FF        -  call LRFF13.exe+CEBA0
+"LRFF13.exe"+DCCF6: 8B CE                 -  mov ecx,esi
+"LRFF13.exe"+DCCF8: E8 03 D5 FF FF        -  call LRFF13.exe+DA200
+"LRFF13.exe"+DCCFD: 84 9E 85 02 00 00     -  test [esi+00000285],bl
+"LRFF13.exe"+DCD03: 5B                    -  pop ebx
+"LRFF13.exe"+DCD04: 75 26                 -  jne LRFF13.exe+DCD2C
+"LRFF13.exe"+DCD06: 6A 00                 -  push 00
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>14</ID>
+          <Description>"hp"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>[pHp]+2e0</Address>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>5</ID>
+      <Description>"锁 ATB"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+aobscanmodule(ATB_INJECT,LRFF13.exe,89 B0 1C 03 00 00)
+alloc(newmem,$1000)
+
+label(code)
+label(return)
+
+newmem:
+  mov esi,#1000000
+code:
+  mov [eax+0000031C],esi
+  jmp return
+
+ATB_INJECT:
+  jmp newmem
+  nop
+return:
+registersymbol(ATB_INJECT)
+
+[DISABLE]
+
+ATB_INJECT:
+  db 89 B0 1C 03 00 00
+
+unregistersymbol(ATB_INJECT)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "LRFF13.exe"+C83E5
+
+"LRFF13.exe"+C83C5: 7E 02                 -  jle LRFF13.exe+C83C9
+"LRFF13.exe"+C83C7: 8B F2                 -  mov esi,edx
+"LRFF13.exe"+C83C9: 83 7D 10 00           -  cmp dword ptr [ebp+10],00
+"LRFF13.exe"+C83CD: 74 09                 -  je LRFF13.exe+C83D8
+"LRFF13.exe"+C83CF: 80 89 86 02 00 00 04  -  or byte ptr [ecx+00000286],04
+"LRFF13.exe"+C83D6: EB 0D                 -  jmp LRFF13.exe+C83E5
+"LRFF13.exe"+C83D8: 8B 55 08              -  mov edx,[ebp+08]
+"LRFF13.exe"+C83DB: 85 D2                 -  test edx,edx
+"LRFF13.exe"+C83DD: 79 06                 -  jns LRFF13.exe+C83E5
+"LRFF13.exe"+C83DF: 29 90 28 03 00 00     -  sub [eax+00000328],edx
+// ---------- INJECTING HERE ----------
+"LRFF13.exe"+C83E5: 89 B0 1C 03 00 00     -  mov [eax+0000031C],esi
+// ---------- DONE INJECTING  ----------
+"LRFF13.exe"+C83EB: 85 DB                 -  test ebx,ebx
+"LRFF13.exe"+C83ED: 7E 1C                 -  jle LRFF13.exe+C840B
+"LRFF13.exe"+C83EF: 8B C6                 -  mov eax,esi
+"LRFF13.exe"+C83F1: 2B C3                 -  sub eax,ebx
+"LRFF13.exe"+C83F3: 85 C0                 -  test eax,eax
+"LRFF13.exe"+C83F5: 7F 14                 -  jg LRFF13.exe+C840B
+"LRFF13.exe"+C83F7: 8B 0D 94 FE D2 02     -  mov ecx,[LRFF13.exe+20BFE94]
+"LRFF13.exe"+C83FD: 81 C1 FC 00 00 00     -  add ecx,000000FC
+"LRFF13.exe"+C8403: E8 88 97 06 00        -  call LRFF13.exe+131B90
+"LRFF13.exe"+C8408: 8B 4D FC              -  mov ecx,[ebp-04]
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>23</ID>
+      <Description>"耐力"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+LRFF13.exe+1D5679:
+  db 90 90 90 90
+
+[DISABLE]
+LRFF13.exe+1D5679:
+  db F2 0F 5C C1
+
+{
+  LRFF13.exe+1D5679 - F2 0F5C C1            - subsd xmm0,xmm1
+}
+
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>35</ID>
+      <Description>"9 GP"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{$lua}
+
+-- 每隔5s检查一次GP，并将其设置为最大值
+
+[ENABLE]
+DoneState = false
+
+local maxGP = 9
+local offset = 2000
+local setValue = maxGP * offset
+
+local curGPAddress = "[058A3588]+2880"
+local maxGPAddress = "[058A3588]+2884"
+
+local htimer = createTimer(getMainForm())
+htimer.Interval = 1000*5
+htimer.OnTimer =  function(timer)
+
+  -- 销毁计时器
+  if DoneState == true then
+     htimer.destroy()
+     return
+  end
+
+  -- 获取当前值
+  local maxGP = readInteger(maxGPAddress)
+  local curGP = readInteger(curGPAddress)
+
+  -- 设置值
+  if curGP ~= nil and maxGP ~= nil then
+    if(maxGP ~= setValue) then writeInteger(maxGPAddress, setValue) end
+    if(curGP ~= setValue) then writeInteger(curGPAddress, setValue) end
+  end
+end
+ 
+[DISABLE]
+DoneState = true
+
+--[[
+{
+  LRFF13.exe+558ED5 - 8B 80 80280000        - mov eax,[eax+00002880]
+}
+]]
+
+
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>34</ID>
+          <Description>"curretn GP"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>058A3588</Address>
+          <Offsets>
+            <Offset>2880</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>38</ID>
+          <Description>"max GP"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>058A3588</Address>
+          <Offsets>
+            <Offset>2884</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>13</ID>
+      <Description>"9999999 GIL"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>// 9999999 GIL
+[ENABLE]
+LRFF13.exe+558B85:
+  db B8 7F 96 98 00 90
+
+[DISABLE]
+LRFF13.exe+558B85:
+  db 8B 80 44 28 00 00
+
+
+{
+  LRFF13.exe+558B85 - 8B 80 44280000        - mov eax,[eax+00002844]
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>765</ID>
+      <Description>"每天时间"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+aobscanmodule(time_INJECT,LRFF13.exe,89 0B 89 43 04)
+alloc(newmem,$1000)
+
+alloc(iTime, $8)
+registersymbol(iTime)
+
+iTime:
+  dd 0
+
+label(code)
+label(return)
+
+newmem:
+  mov [iTime],ebx
+code:
+  mov [ebx],ecx
+  mov [ebx+04],eax
+  jmp return
+
+time_INJECT:
+  jmp newmem
+return:
+registersymbol(time_INJECT)
+
+[DISABLE]
+
+time_INJECT:
+  db 89 0B 89 43 04
+unregistersymbol(iTime)
+dealloc(iTime)
+unregistersymbol(time_INJECT)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "LRFF13.exe"+1E4B81
+
+"LRFF13.exe"+1E4B65: 77 0F              -  ja LRFF13.exe+1E4B76
+"LRFF13.exe"+1E4B67: 8B 45 08           -  mov eax,[ebp+08]
+"LRFF13.exe"+1E4B6A: 8B 48 08           -  mov ecx,[eax+08]
+"LRFF13.exe"+1E4B6D: 3B 4D F0           -  cmp ecx,[ebp-10]
+"LRFF13.exe"+1E4B70: 0F 82 61 FF FF FF  -  jb LRFF13.exe+1E4AD7
+"LRFF13.exe"+1E4B76: 8B 5D FC           -  mov ebx,[ebp-04]
+"LRFF13.exe"+1E4B79: 8B 45 F4           -  mov eax,[ebp-0C]
+"LRFF13.exe"+1E4B7C: 8B 4D F0           -  mov ecx,[ebp-10]
+"LRFF13.exe"+1E4B7F: 50                 -  push eax
+"LRFF13.exe"+1E4B80: 51                 -  push ecx
+// ---------- INJECTING HERE ----------
+"LRFF13.exe"+1E4B81: 89 0B              -  mov [ebx],ecx
+"LRFF13.exe"+1E4B83: 89 43 04           -  mov [ebx+04],eax
+// ---------- DONE INJECTING  ----------
+"LRFF13.exe"+1E4B86: E8 45 F7 33 00     -  call LRFF13.exe+5242D0
+"LRFF13.exe"+1E4B8B: 83 C4 08           -  add esp,08
+"LRFF13.exe"+1E4B8E: 83 7D F8 00        -  cmp dword ptr [ebp-08],00
+"LRFF13.exe"+1E4B92: 74 65              -  je LRFF13.exe+1E4BF9
+"LRFF13.exe"+1E4B94: 81 C6 A8 00 00 00  -  add esi,000000A8
+"LRFF13.exe"+1E4B9A: BF 10 00 00 00     -  mov edi,00000010
+"LRFF13.exe"+1E4B9F: 90                 -  nop 
+"LRFF13.exe"+1E4BA0: 8B 0E              -  mov ecx,[esi]
+"LRFF13.exe"+1E4BA2: 85 C9              -  test ecx,ecx
+"LRFF13.exe"+1E4BA4: 74 08              -  je LRFF13.exe+1E4BAE
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>766</ID>
+          <Description>"timer"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>[iTime]</Address>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry Color="20000000">
+      <Description>访问hp</Description>
+      <AddressString>LRFF13.exe+C82E0</AddressString>
+      <Before>
+        <Byte>E8</Byte>
+        <Byte>02</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>C3</Byte>
+      </Before>
+      <Actual>
+        <Byte>8B</Byte>
+        <Byte>81</Byte>
+        <Byte>E0</Byte>
+        <Byte>02</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>C3</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>受到伤害</Description>
+      <AddressString>LRFF13.exe+DCCE2</AddressString>
+      <Before>
+        <Byte>00</Byte>
+        <Byte>EB</Byte>
+        <Byte>1D</Byte>
+        <Byte>8B</Byte>
+        <Byte>CE</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>BE</Byte>
+        <Byte>E0</Byte>
+        <Byte>02</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>E8</Byte>
+        <Byte>F3</Byte>
+        <Byte>7C</Byte>
+        <Byte>FE</Byte>
+        <Byte>FF</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>设置ATB</Description>
+      <AddressString>LRFF13.exe+C83E5</AddressString>
+      <Before>
+        <Byte>90</Byte>
+        <Byte>28</Byte>
+        <Byte>03</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>B0</Byte>
+        <Byte>1C</Byte>
+        <Byte>03</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>85</Byte>
+        <Byte>DB</Byte>
+        <Byte>7E</Byte>
+        <Byte>1C</Byte>
+        <Byte>8B</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="80000008">
+      <Description>消耗耐力</Description>
+      <AddressString>LRFF13.exe+1D5679</AddressString>
+      <Before>
+        <Byte>D2</Byte>
+        <Byte>F2</Byte>
+        <Byte>0F</Byte>
+        <Byte>59</Byte>
+        <Byte>CA</Byte>
+      </Before>
+      <Actual>
+        <Byte>F2</Byte>
+        <Byte>0F</Byte>
+        <Byte>5C</Byte>
+        <Byte>C1</Byte>
+      </Actual>
+      <After>
+        <Byte>0F</Byte>
+        <Byte>57</Byte>
+        <Byte>C9</Byte>
+        <Byte>66</Byte>
+        <Byte>0F</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="80000008">
+      <Description>访问GP 1==2000</Description>
+      <AddressString>LRFF13.exe+558ED5</AddressString>
+      <Before>
+        <Byte>A1</Byte>
+        <Byte>88</Byte>
+        <Byte>35</Byte>
+        <Byte>8A</Byte>
+        <Byte>05</Byte>
+      </Before>
+      <Actual>
+        <Byte>8B</Byte>
+        <Byte>80</Byte>
+        <Byte>80</Byte>
+        <Byte>28</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>C3</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="80000008">
+      <Description>替换了 and [edi+00000226],dx</Description>
+      <AddressString>LRFF13.exe+31DF83</AddressString>
+      <Before>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>8B</Byte>
+        <Byte>D1</Byte>
+      </Before>
+      <Actual>
+        <Byte>66</Byte>
+        <Byte>21</Byte>
+        <Byte>97</Byte>
+        <Byte>26</Byte>
+        <Byte>02</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>81</Byte>
+        <Byte>A6</Byte>
+        <Byte>8C</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="80000008">
+      <Description>替换了 and [edi+0000014E],cx</Description>
+      <AddressString>LRFF13.exe+31DF7A</AddressString>
+      <Before>
+        <Byte>B9</Byte>
+        <Byte>FE</Byte>
+        <Byte>FF</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>66</Byte>
+        <Byte>21</Byte>
+        <Byte>8F</Byte>
+        <Byte>4E</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>D1</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="80000008">
+      <Description>替换了 and [esi+0000014E],cx</Description>
+      <AddressString>LRFF13.exe+2D7F03</AddressString>
+      <Before>
+        <Byte>B9</Byte>
+        <Byte>FE</Byte>
+        <Byte>FF</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>66</Byte>
+        <Byte>21</Byte>
+        <Byte>8E</Byte>
+        <Byte>4E</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>D1</Byte>
+        <Byte>66</Byte>
+        <Byte>21</Byte>
+        <Byte>96</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="80000008">
+      <Description>替换了 or [esi+0000014E],ax</Description>
+      <AddressString>LRFF13.exe+2D7EE6</AddressString>
+      <Before>
+        <Byte>B8</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>66</Byte>
+        <Byte>09</Byte>
+        <Byte>86</Byte>
+        <Byte>4E</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>66</Byte>
+        <Byte>09</Byte>
+        <Byte>86</Byte>
+        <Byte>26</Byte>
+        <Byte>02</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="80000008">
+      <Description>替换了 and [esi+00000226],dx</Description>
+      <AddressString>LRFF13.exe+2D7F0C</AddressString>
+      <Before>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>8B</Byte>
+        <Byte>D1</Byte>
+      </Before>
+      <Actual>
+        <Byte>66</Byte>
+        <Byte>21</Byte>
+        <Byte>96</Byte>
+        <Byte>26</Byte>
+        <Byte>02</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>CE</Byte>
+        <Byte>E8</Byte>
+        <Byte>C6</Byte>
+        <Byte>D2</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="80000008">
+      <Description>替换了 or [esi+00000226],ax</Description>
+      <AddressString>LRFF13.exe+2D7EED</AddressString>
+      <Before>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+      </Before>
+      <Actual>
+        <Byte>66</Byte>
+        <Byte>09</Byte>
+        <Byte>86</Byte>
+        <Byte>26</Byte>
+        <Byte>02</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>50</Byte>
+        <Byte>8B</Byte>
+        <Byte>CE</Byte>
+        <Byte>E8</Byte>
+        <Byte>04</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+  <Comments>// 玩家与怪的差异
+hp +2e0
+max hp +30c
++8 my==#35
++101 my==#48
++111 my==#48
++1c0 my==#1
++24c my==#500
+
+// 内存扫描范围
+00000000DE000000
+00000000DEFFFFFF
+
+// 改变时间 4字节 50000000 大概等于 游戏1小时
+00D94B81 - 89 0B  - mov [ebx],ecx
+00D94B83 - 89 43 04  - mov [ebx+04],eax
+00D94AE6 - 89 08  - mov [eax],ecx
+00D94AED - 89 50 04  - mov [eax+04],edx
+</Comments>
+  <DisassemblerComments>
+    <DisassemblerComment>
+      <Address>"LRFF13.exe"+C82D0</Address>
+      <Comment>普通怪 and 0,8 跳
+</Comment>
+    </DisassemblerComment>
+    <DisassemblerComment>
+      <Address>"LRFF13.exe"+C82E0</Address>
+      <Comment>访问hp,战斗时触发
+</Comment>
+    </DisassemblerComment>
+    <DisassemblerComment>
+      <Address>"LRFF13.exe"+C83E5</Address>
+      <Comment>设置ATB
+</Comment>
+    </DisassemblerComment>
+    <DisassemblerComment>
+      <Address>"LRFF13.exe"+DCCE2</Address>
+      <Comment>受到伤害
+</Comment>
+    </DisassemblerComment>
+    <DisassemblerComment>
+      <Address>"LRFF13.exe"+1D568A</Address>
+      <Comment>消耗耐力
+</Comment>
+    </DisassemblerComment>
+    <DisassemblerComment>
+      <Address>"LRFF13.exe"+558ED5</Address>
+      <Comment>访问GP 1==2000
+</Comment>
+    </DisassemblerComment>
+  </DisassemblerComments>
+</CheatTable>
